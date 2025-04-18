@@ -1,6 +1,7 @@
 import { test } from '@playwright/test';
+
 import { LoginPage } from '../../pages/login.page';
-import { readTestUser } from '../../helpers/userDataHelper';
+import { readTestUser } from '../../helpers/userData';
 
 test.describe('User Login Flow', () => {
   test('should login using previously registered credentials', async ({
