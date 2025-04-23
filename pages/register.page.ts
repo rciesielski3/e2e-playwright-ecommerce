@@ -1,7 +1,29 @@
-import { Page, expect } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 export class RegisterPage {
-  constructor(private page: Page) {}
+  readonly page: Page;
+  readonly firstNameInput: Locator;
+  readonly lastNameInput: Locator;
+  readonly emailInput: Locator;
+  readonly phoneInput: Locator;
+  readonly passwordInput: Locator;
+  readonly confirmPasswordInput: Locator;
+  readonly agreeCheckbox: Locator;
+  readonly continueButton: Locator;
+  readonly successHeader: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.firstNameInput = page.locator('#input-firstname');
+    this.lastNameInput = page.locator('#input-lastname');
+    this.emailInput = page.locator('#input-email');
+    this.phoneInput = page.locator('#input-telephone');
+    this.passwordInput = page.locator('#input-password');
+    this.confirmPasswordInput = page.locator('#input-confirm');
+    this.agreeCheckbox = page.locator('label[for="input-agree"]');
+    this.continueButton = page.locator('input[value="Continue"]');
+    this.successHeader = page.locator('h1');
+  }
 
   async goto() {
     await this.page.goto('/index.php?route=account/register');
@@ -14,18 +36,18 @@ export class RegisterPage {
     phone: string;
     password: string;
   }) {
-    await this.page.fill('#input-firstname', user.firstName);
-    await this.page.fill('#input-lastname', user.lastName);
-    await this.page.fill('#input-email', user.email);
-    await this.page.fill('#input-telephone', user.phone);
-    await this.page.fill('#input-password', user.password);
-    await this.page.fill('#input-confirm', user.password);
-    await this.page.click('label[for="input-agree"]');
-    await this.page.click('input[value="Continue"]');
+    await this.firstNameInput.fill(user.firstName);
+    await this.lastNameInput.fill(user.lastName);
+    await this.emailInput.fill(user.email);
+    await this.phoneInput.fill(user.phone);
+    await this.passwordInput.fill(user.password);
+    await this.confirmPasswordInput.fill(user.password);
+    await this.agreeCheckbox.click();
+    await this.continueButton.click();
   }
 
   async assertRegistrationSuccess() {
-    await expect(this.page.locator('h1')).toHaveText(
+    await expect(this.successHeader).toHaveText(
       'Your Account Has Been Created!',
     );
   }
