@@ -27,6 +27,7 @@ export class ProductPage {
   }
 
   async goToCart() {
+    await this.cartIcon.isVisible();
     await this.cartIcon.click();
     await expect(this.cartDrawer).toBeVisible();
   }
