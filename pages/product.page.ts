@@ -3,6 +3,7 @@ import { Locator, Page, expect } from '@playwright/test';
 export class ProductPage {
   readonly page: Page;
   readonly addToCartButton: Locator;
+  readonly addToWishlistButton: Locator;
   readonly toastBody: Locator;
   readonly cartIcon: Locator;
   readonly cartDrawer: Locator;
@@ -10,6 +11,7 @@ export class ProductPage {
   constructor(page: Page) {
     this.page = page;
     this.addToCartButton = page.getByRole('button', { name: 'Add to Cart' });
+    this.addToWishlistButton = page.locator('button.btn-wishlist-48');
     this.toastBody = page.locator('.toast-body');
     this.cartIcon = page.locator('.cart-icon').first();
     this.cartDrawer = page.locator('#cart-total-drawer');
@@ -27,5 +29,10 @@ export class ProductPage {
   async goToCart() {
     await this.cartIcon.click();
     await expect(this.cartDrawer).toBeVisible();
+  }
+
+  async addToWishlist() {
+    await this.addToWishlistButton.click();
+    await expect(this.toastBody).toContainText('Success: You have added');
   }
 }
