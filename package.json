@@ -2,11 +2,14 @@
   "name": "e2e-playwright-ecommerce",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "lint": "eslint ."
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Playwright end-to-end tests (page objects, fixtures) for an e-commerce demo store",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@faker-js/faker": "^9.7.0",
