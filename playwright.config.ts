@@ -17,9 +17,13 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: 2,
-  /* Opt out of parallel tests on CI. */
+  /*
+   * No retries locally so flakiness stays visible. On CI a single retry is a
+   * documented last resort: the target is a public third-party demo site we
+   * do not control. Retried passes are reported as "flaky" - investigate them.
+   */
+  retries: process.env.CI ? 1 : 0,
+  /* Serial: be gentle with the shared public demo site. */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',

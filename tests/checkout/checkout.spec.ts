@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/test.fixture';
 
-import { readTestUser } from '../../helpers/userData';
 import { LoginPage } from '../../pages/login.page';
 import { ProductPage } from '../../pages/product.page';
 import { CheckoutPage } from '../../pages/checkout.page';
@@ -9,9 +8,9 @@ import { generateCheckoutUser } from '../../fixtures/user.fixture';
 test.describe('Full Checkout Flow', () => {
   test('should login, add item to cart, and complete checkout', async ({
     page,
+    registeredUser: user,
   }) => {
     // Arrange
-    const user = readTestUser();
     const checkoutData = generateCheckoutUser();
 
     const loginPage = new LoginPage(page);
@@ -33,22 +32,13 @@ test.describe('Full Checkout Flow', () => {
     // Act: Go to checkout
     await checkoutPage.proceedToCheckout();
 
-    // Assert: Checkout page loaded
-    await expect(page.locator('#form-checkout')).toBeVisible();
+    // Act: Complete the single-page checkout
+    await checkoutPage.fillShippingAddress(checkoutData);
+    await checkoutPage.chooseShippingMethod();
+    await checkoutPage.choosePaymentMethod();
 
-    // Act: Fill and submit checkout form
-    await checkoutPage.fillCheckoutForm(checkoutData);
-    await checkoutPage.agreeToTermsAndContinue();
-
-    // Assert: Payment page loaded
-    await expect(page).toHaveURL(/confirm/);
-
-    // Act + Assert: Confirm order
-    await checkoutPage.confirmOrder(); // includes header text assertion
-
-    // Act + Assert: Return to home
-    await checkoutPage.navigateToHomePageAfterOrder();
-    await expect(page).toHaveURL(/home/);
-    await expect(page.locator('#common-home')).toBeVisible();
+    // Act + Assert: Confirm order (asserts success URL and heading)
+    await checkoutPage.confirmOrder();
+    await expect(page).toHaveURL(/checkout\/success/);
   });
 });
