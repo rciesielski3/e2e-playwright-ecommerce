@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Playwright end-to-end tests (page objects, fixtures) for an e-commerce demo store",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
