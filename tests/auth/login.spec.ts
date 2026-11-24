@@ -1,21 +1,32 @@
-import { test } from '@playwright/test';
-
+import { test, expect } from '../../fixtures/test.fixture';
 import { LoginPage } from '../../pages/login.page';
-import { readTestUser } from '../../helpers/userData';
 
 test.describe('User Login Flow', () => {
-  test('should login using previously registered credentials', async ({
+  test('should login with valid credentials', async ({
     page,
+    registeredUser,
   }) => {
-    // Arrange
-    const user = readTestUser();
     const loginPage = new LoginPage(page);
 
-    // Act
     await loginPage.goto();
-    await loginPage.login(user.email, user.password);
+    await loginPage.login(registeredUser.email, registeredUser.password);
 
-    // Assert
     await loginPage.assertLoggedIn();
+    await expect(page).toHaveURL(/account\/account/);
+  });
+
+  test('should reject invalid credentials', async ({
+    page,
+    registeredUser,
+  }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+    await loginPage.login(registeredUser.email, `${registeredUser.password}x`);
+
+    await expect(page).toHaveURL(/account\/login/);
+    await expect(page.locator('.alert-danger')).toContainText(
+      'No match for E-Mail Address and/or Password',
+    );
   });
 });
